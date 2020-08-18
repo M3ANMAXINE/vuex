@@ -1,19 +1,50 @@
 <template>
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <p v-text="busy"></p>
+    <p v-text="sale"></p>
+    <input type="text" placeholder="Ingrese un articulo" v-model="search">
+    <ul v-if="searchById"> 
+      <li>{{ searchById.nombre }}</li>
+    </ul>
+
+    <ul v-else>
+      <li v-for="(product,index) in availableProducts" :key="index">{{ product.nombre }}</li>
+    </ul>
+              <p>Ofertas de ultimo minuto</p>
+    <ul>
+      <li v-for="(product,index) in cheapProducts" :key="index">{{ product.nombre }} {{ '$ ' + product.precio }}</li>
+    </ul>
+
   </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import { mapState,mapGetters } from "vuex";
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
+  data(){
+    return {
+      search: null
+    }
+  },
+  computed: { 
+  ...mapState (['isBusy', 'sales']),
+  ...mapGetters(['availableProducts','cheapProducts', 'getProductById']),
+    busy () {
+let status = this.isBusy ? 'ocupado' : 'disponible'
+return `Estado ${status}` 
+  },
+  sale () {
+    return `El total de ventas es : ${this.sales}`//sale muestra las ventas
+  },
+  searchById () {
+return this.getProductById(this.search)
+    }
+  },
   }
-}
+
 </script>
 
 <style>
