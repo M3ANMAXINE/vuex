@@ -2,6 +2,7 @@
   <div id="app">
     <img alt="Vue logo" src="./assets/logo.png">
     <p v-text="busy"></p>
+    <button @click.prevent="toggleBusy" class="btn btn-danger ">Cambiar Estado</button>
     <p v-text="sale"></p>
     <input type="text" placeholder="Ingrese un articulo" v-model="search">
     <ul v-if="searchById"> 
@@ -10,6 +11,11 @@
 
     <ul v-else>
       <li v-for="(product,index) in availableProducts" :key="index">{{ product.nombre }}</li>
+    </ul>
+
+    <ul>
+      <li v-for="(product,index) in products" :key="index">{{ product.nombre }} {{ product.stock}} 
+        <button @click.prevent='addStock(product)' class="btn btn-danger">+</button>  </li>
     </ul>
               <p>Ofertas de ultimo minuto</p>
     <ul>
@@ -20,7 +26,7 @@
 </template>
 
 <script>
-import { mapState,mapGetters } from "vuex";
+import { mapState,mapGetters, mapActions } from "vuex";
 
 export default {
   name: 'App',
@@ -30,7 +36,7 @@ export default {
     }
   },
   computed: { 
-  ...mapState (['isBusy', 'sales']),
+  ...mapState (['isBusy', 'sales', 'products']),
   ...mapGetters(['availableProducts','cheapProducts', 'getProductById']),
     busy () {
 let status = this.isBusy ? 'ocupado' : 'disponible'
@@ -43,6 +49,9 @@ return `Estado ${status}`
 return this.getProductById(this.search)
     }
   },
+  methods: {
+    ...mapActions(['toggleBusy', 'addStock'])
+  }
   }
 
 </script>

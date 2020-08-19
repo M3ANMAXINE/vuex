@@ -14,6 +14,28 @@ const store = new Vuex.Store({
       {id: '0004', nombre: 'Pan marraqueta integral 1kg', stock: 100,precio: 990},
       {id: '0005', nombre: 'Avena multisemillas', stock: 0, precio: 1390}]
   },
+  mutations: {
+    TOGGLE_BUSY: (state) =>
+    {
+      state.isBusy = !state.isBusy
+    },
+    ADD_STOCK: (state, product) =>
+    {
+      let selectedProduct = state.products.find((prod) => {
+        return product.id == prod.id
+      }
+       ) 
+       selectedProduct.stock++
+    }
+  },
+  actions: {
+    toggleBusy ({ commit }){
+      commit("TOGGLE_BUSY")
+    },
+    addStock({ commit }, product){
+      commit('ADD_STOCK', product)
+    }
+  },
   getters: {// getters trae los datos de state
     availableProducts (state)  {
       return state.products.filter((product) => {
